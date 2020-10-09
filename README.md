@@ -3,18 +3,23 @@ Genesis Block Generator for Blake coins
 
 This version generates a 150 coin block reward, not a 50 coin block reward.
 
+The Blake hashing is included and does not need any link libraries; only openssl development libraries are needed. On Unix like systems, e.g. ```sudo apt install openssl-dev``` or ```sudo dnf install openssl-devel```.
+
 See ```transaction->outValue = 150*COIN;``` in InitTransaction, line 127. Change to 50*COIN for Bitcoin-like coins.
 
 Original post https://bitcointalk.org/index.php?topic=181981.0 
 
 Compile:
 --------
+
+Just clone this repository and type ```make```. Or:
+
 ```bash
   gcc blakegenesis.c -Wall -O2 -o genesis sph_blake.c -lcrypto
 ```
 Usage:
 ------
-  generator &lt;pubkey&gt; &lt;timestamp&gt; &lt;nBits&gt;
+  ```$ ./blakegenesis pubkey "timestamp" nBits```
   
 Example:
 --------
