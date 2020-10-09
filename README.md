@@ -1,12 +1,16 @@
-Genesis Block Generator
-=======================
+Genesis Block Generator for Blake coins
+=======================================
+
+This version generates a 150 coin block reward, not a 50 coin block reward.
+
+See ```transaction->outValue = 150*COIN;``` in InitTransaction, line 127. Change to 50*COIN for Bitcoin-like coins.
 
 Original post https://bitcointalk.org/index.php?topic=181981.0 
 
 Compile:
 --------
 ```bash
-  gcc generator.c -o generator -lcrypto
+  gcc blakegenesis.c -Wall -O2 -o genesis sph_blake.c -lcrypto
 ```
 Usage:
 ------
@@ -15,25 +19,23 @@ Usage:
 Example:
 --------
 ```bash
-./generator 04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef3 8c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks" 486604799
+./genesis 04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f "MAGA - Make Altcoins Great Again" 486604799
 ```
 Output:
 -------
 ```bash
-Coinbase: 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f7 2206f6e206272696e6b206f66207365636f6e6420
-6261696c6f757420666f722062616e6b73
+Coinbase: 04ffff001d0104204d414741202d204d616b6520416c74636f696e7320477265617420416761696e
 
-PubkeyScript: 4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4ce f38c4f35504e51ec112de5c384df7ba0b8d57
-8a4c702b6bf11d5fac
+PubkeyScript: 4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac
 
-Merkle Hash: 3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a
-Byteswapped: 4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
+Merkle Hash: be815869d79d8c8a32f13705a7924c0d858c57c30150237a4b7576e91e720a1d
+Byteswapped: 1d0a721ee976754b7a235001c3578c850d4c92a70537f1328a8c9dd7695881be
 Generating block...
-
+2732095 Hashes/s, Nonce 1138670733
 Block found!
-Hash: 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
-Nonce: 2083236893
-Unix time: 1231006505
+Hash: 000000004c261f2a2b3479073b4f50592d9550542f3e5a5d604803780699fdbb
+Nonce: 1138803514
+Unix time: 1602159548
 ```
 #To change:
 unixtime = 1231006505 # set time 09/01/2009 for Bitcoin genesis block
