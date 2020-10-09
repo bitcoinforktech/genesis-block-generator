@@ -9,6 +9,8 @@
 #include <time.h>
 #include <openssl/sha.h>
 
+#include "sph_blake.h"
+
 //Copied from Bitcoin source
 const uint64_t COIN = 100000000;
 const uint64_t CENT = 1000000;
@@ -16,7 +18,7 @@ const uint64_t CENT = 1000000;
 uint32_t OP_CHECKSIG = 172; // This is expressed as 0xAC
 bool generateBlock = false;
 uint32_t startNonce = 0;
-uint32_t unixtime = 0;
+uint32_t unixtime = 1602159547;
 
 typedef struct {
 	/* Hash of Tx */
@@ -124,7 +126,7 @@ Transaction *InitTransaction()
 	transaction->locktime = 0;
 	transaction->prevoutIndex = 0xFFFFFFFF;
 	transaction->sequence = 0xFFFFFFFF;
-	transaction->outValue = 50*COIN;
+	transaction->outValue = 150*COIN;
 	
 	// We initialize the previous output to 0 as there is none
 	memset(transaction->prevOutput, 0, 32);
@@ -306,15 +308,19 @@ int main(int argc, char *argv[])
 		unsigned int counter, start = time(NULL);
 		while(1)
 		{
-			SHA256(block_header, 80, block_hash1);
-			SHA256(block_hash1, 32, block_hash2);
+			// SHA256(block_header, 80, block_hash1);
+			// SHA256(block_hash1, 32, block_hash2);
+			sph_blake256_context ctx_blake;
+			sph_blake256_init(&ctx_blake);
+			sph_blake256 (&ctx_blake, block_header, 80);
+			sph_blake256_close(&ctx_blake, block_hash2);
 			
 			unsigned int check = *((uint32_t *)(block_hash2 + 28)); // The hash is in little-endian, so we check the last 4 bytes.
 			if(check == 0) // \x00\x00\x00\x00
 			{
 				byteswap(block_hash2, 32);
 				char *blockHash = bin2hex(block_hash2, 32);
-				printf("\nBlock found!\nHash: %s\nNonce: %u\nUnix time: %u", blockHash, startNonce, unixtime);
+				printf("\nBlake-256 block found!\nHash: %s\nNonce: %u\nUnix time: %u\n\n", blockHash, startNonce, unixtime);
 				free(blockHash);
 				break;
 			}
